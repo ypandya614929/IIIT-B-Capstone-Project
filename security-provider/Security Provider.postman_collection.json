@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "040e7108-831c-4065-a14c-7be6256f404e",
+		"name": "Security Provider",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Security",
+			"item": [
+				{
+					"name": "Generate Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\":\"normal-user@abc.com\",\n\t\"password\":\"Test@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8088/foodDelivery/security/generate-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"foodDelivery",
+								"security",
+								"generate-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJEZW1vIEFwcCIsInN1YiI6Im5vcm1hbC11c2VyQGFiYy5jb20iLCJpYXQiOjE2MTY5MjM3OTYsImV4cCI6MTYxNzMzMzg2MSwiUm9sZXMiOlsiUk9MRV9VU0VSIl19.8UEE_r2VYIw-SutacJmSx5ndDbiFSqgyoApVc5BnVKPGerB0QB8fNXV702TJoqFATUaUU5n9WazeqopNzOHKkg",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8088/foodDelivery/security/user/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"foodDelivery",
+								"security",
+								"user",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

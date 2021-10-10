@@ -1,0 +1,133 @@
+version: '3'
+
+services:
+  service-registry:
+    build: service-registry
+    container_name: serviceregistry
+    image: bmc/service-registry:1.0.0
+    ports:
+      - "8761:8761"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: 127.0.0.1
+      REGISTRY_PORT: 8761
+
+  bmc-gateway:
+    build: bmc-gateway
+    container_name: bmcgateway
+    image: bmc/bmc-gateway:1.0.0
+    ports:
+      - "9191:9191"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+    depends_on:
+      - service-registry
+
+  notification-service:
+    build: notification-service
+    container_name: notificationservice
+    image: bmc/notification-service:1.0.0
+    ports:
+      - "8085:8085"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+      NOTIFICATION_PORT: 8085
+    depends_on:
+      - service-registry
+
+  rating-service:
+    build: rating-service
+    container_name: ratingservice
+    image: bmc/rating-service:1.0.0
+    ports:
+      - "8084:8084"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+      RATING_SVC_PORT: 8084
+    depends_on:
+      - service-registry
+      - bmc-gateway
+      - doctor-service
+
+  user-service:
+    build: user-service
+    container_name: userservice
+    image: bmc/user-service:1.0.0
+    ports:
+      - "8083:8083"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+      USER_SVC_PORT: 8083
+    depends_on:
+      - service-registry
+      - bmc-gateway
+      - notification-service
+
+  doctor-service:
+    build: doctor-service
+    container_name: doctorservice
+    image: bmc/doctor-service:1.0.0
+    ports:
+      - "8081:8081"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+      DOCTOR_SVC_PORT: 8081
+    depends_on:
+      - service-registry
+      - bmc-gateway
+      - notification-service
+
+  appointment-service:
+    build: appointment-service
+    container_name: appointmentservice
+    image: bmc/appointment-service:1.0.0
+    ports:
+      - "8082:8082"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+      APPOINTMENT_SVC_PORT: 8082
+    depends_on:
+      - service-registry
+      - bmc-gateway
+      - notification-service
+
+  payment-service:
+    build: payment-service
+    container_name: paymentservice
+    image: bmc/payment-service:1.0.0
+    ports:
+      - "8086:8086"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+      PAYMENT_SVC_PORT: 8086
+    depends_on:
+      - service-registry
+      - bmc-gateway
+      - appointment-service
+
+
+networks:
+  book-my-consultation-nw:
+    driver: bridge
