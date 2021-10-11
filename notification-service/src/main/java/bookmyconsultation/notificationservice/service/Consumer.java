@@ -38,22 +38,22 @@ public class Consumer {
         //Prints the topic subscription list
         Set<String> subscribedTopics = consumer.subscription();
 
-        try {
-            while(true) {
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-                for(ConsumerRecord<String, String> record : records) {
-                    if(record.key().equalsIgnoreCase("DOCTOR_SERVICE_UPDATE") || record.key().equalsIgnoreCase("APPOINTMENT_SERVICE") || record.key().equalsIgnoreCase("PRESCRIPTION")){
-                        notificationService.fetchMessage(record.key(), record.value());
-                    }
-                }
-            }
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } finally { }
+//        try {
+//            while(true) {
+//                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+//                for(ConsumerRecord<String, String> record : records) {
+//                    if(record.key().equalsIgnoreCase("DOCTOR_SERVICE_UPDATE") || record.key().equalsIgnoreCase("APPOINTMENT_SERVICE") || record.key().equalsIgnoreCase("PRESCRIPTION")){
+//                        notificationService.fetchMessage(record.key(), record.value());
+//                    }
+//                }
+//            }
+//        } catch (TemplateException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        } finally { }
 
     }
 

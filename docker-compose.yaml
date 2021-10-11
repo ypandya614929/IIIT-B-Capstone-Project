@@ -142,6 +142,11 @@ services:
     depends_on:
       - service-registry
       - bmc-gateway
+      - doctor-service
+      - user-service
+      - appointment-service
+      - payment-service
+      - rating-service
 
 
 networks:

@@ -4,7 +4,7 @@ MAINTAINER ypandya614929
 WORKDIR /opt/app
 COPY src /opt/app/src
 COPY pom.xml /opt/app
-RUN mvn -f /opt/app/pom.xml clean package
+RUN mvn clean install spring-boot:repackage
 
 # 2
 FROM openjdk:14-jdk-alpine
