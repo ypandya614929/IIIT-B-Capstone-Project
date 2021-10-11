@@ -40,17 +40,17 @@ public class Consumer {
             System.out.println(topic);
         }
 
-        while(true) {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-            for(ConsumerRecord<String, String> record : records) {
-                if(record.key().equalsIgnoreCase("DOCTOR_RATINGS")){
-                    String[] values = record.value().split(",", 2);
-                    String doctorId = values[0];
-                    float rating = Float.parseFloat(values[1]);
-                    doctorServiceImpl.updateDoctorRatings(doctorId, rating);
-                }
-            }
-        }
+//        while(true) {
+//            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+//            for(ConsumerRecord<String, String> record : records) {
+//                if(record.key().equalsIgnoreCase("DOCTOR_RATINGS")){
+//                    String[] values = record.value().split(",", 2);
+//                    String doctorId = values[0];
+//                    float rating = Float.parseFloat(values[1]);
+//                    doctorServiceImpl.updateDoctorRatings(doctorId, rating);
+//                }
+//            }
+//        }
     }
 
 }

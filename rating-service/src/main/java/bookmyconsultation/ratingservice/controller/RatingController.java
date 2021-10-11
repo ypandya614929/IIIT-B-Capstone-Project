@@ -7,10 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -26,7 +24,8 @@ public class RatingController {
 
     @PostMapping(value = "/ratings", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity addRatings(@RequestBody RatingDTO ratingDTO){
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity addRatings(@RequestBody RatingDTO ratingDTO) {
 
         RatingEntity rating = modelMapper.map(ratingDTO, RatingEntity.class);
         RatingEntity savedRating = ratingService.addRating(rating);
