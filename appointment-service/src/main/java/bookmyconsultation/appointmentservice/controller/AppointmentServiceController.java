@@ -35,7 +35,7 @@ public class AppointmentServiceController {
 
     @PostMapping(value = "/doctor/{doctorId}/availability", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity saveAvailaibility(@PathVariable(name = "doctorId") String doctorId, @RequestBody AvailabilityServiceRequestDTO availabilityRequestDTO){
+    public ResponseEntity saveAvailability(@PathVariable(name = "doctorId") String doctorId, @RequestBody AvailabilityRequestDTO availabilityRequestDTO){
         availabilityService.saveAvailability(doctorId, availabilityRequestDTO);
         return ResponseEntity.ok().build();
     }
@@ -43,35 +43,35 @@ public class AppointmentServiceController {
 
     @GetMapping(value = "/doctor/{doctorId}/availability", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getAvailabilityByDoctor(@PathVariable(name = "doctorId") String doctorId){
-        AvailabilityServiceResponseDTO availabilityServiceResponseDTO = availabilityService.getAvailabilityByDoctor(doctorId);
+        AvailabilityResponseDTO availabilityServiceResponseDTO = availabilityService.getAvailabilityByDoctor(doctorId);
         return new ResponseEntity(availabilityServiceResponseDTO, HttpStatus.OK);
     }
 
 
     @PostMapping(value = "/appointments", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity bookAppointment(@RequestBody AppointmentServiceRequestDTO appointmentDTO) throws TemplateException, MessagingException, IOException {
-        AppointmentServiceResponseDTO appointmentServiceResponseDTO = appointmentService.bookAppointment(appointmentDTO);
+    public ResponseEntity bookAppointment(@RequestBody AppointmentRequestDTO appointmentDTO) throws TemplateException, MessagingException, IOException, javax.mail.MessagingException {
+        AppointmentResponseDTO appointmentServiceResponseDTO = appointmentService.bookAppointment(appointmentDTO);
         return ResponseEntity.ok().body(appointmentServiceResponseDTO.getAppointmentId());
     }
 
 
     @GetMapping(value = "/appointments/{appointmentId}")
     public ResponseEntity retrieveAppointment(@PathVariable(name = "appointmentId") String appointmentId){
-        AppointmentServiceResponseDTO appointmentServiceResponseDTO = appointmentService.retrieveAppointment(appointmentId);
+        AppointmentResponseDTO appointmentServiceResponseDTO = appointmentService.retrieveAppointment(appointmentId);
         return new ResponseEntity(appointmentServiceResponseDTO, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "/users/{userId}/appointments")
     public ResponseEntity retrieveAppointmentByUserId(@PathVariable(name = "userId") String userId){
-        List<AppointmentServiceResponseDTO> appointmentServiceResponseDTOList = appointmentService.retrieveAppointmentByUserId(userId);
+        List<AppointmentResponseDTO> appointmentServiceResponseDTOList = appointmentService.retrieveAppointmentByUserId(userId);
         return new ResponseEntity(appointmentServiceResponseDTOList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/prescriptions", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity savePrescription(@RequestBody PrescriptionserviceRequestDTO prescriptionserviceRequestDTO){
+    public ResponseEntity savePrescription(@RequestBody PrescriptionRequestDTO prescriptionserviceRequestDTO){
         appointmentService.savePrescription(prescriptionserviceRequestDTO);
         return ResponseEntity.ok().build();
     }

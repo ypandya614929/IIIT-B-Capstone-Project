@@ -7,20 +7,23 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: APPOINTMENT-SERVICE
+          uri: lb://APPOINTMENT-SERVICE
+          predicates:
+            - Path=/appointments/**, /doctor/{doctorId}/availability/**, /users/{userId}/appointments/**, /prescriptions/**
+          order: 0
+
         - id: DOCTOR-SERVICE
           uri: lb://DOCTOR-SERVICE
           predicates:
             - Path=/doctors/**
+          order: 1
 
         - id: USER-SERVICE
           uri: lb://USER-SERVICE
           predicates:
             - Path=/users/**
-
-        - id: APPOINTMENT-SERVICE
-          uri: lb://APPOINTMENT-SERVICE
-          predicates:
-            - Path=/appointments/**
+          order: 2
 
         - id: PAYMENT-SERVICE
           uri: lb://PAYMENT-SERVICE
@@ -31,5 +34,6 @@ spring:
           uri: lb://RATING-SERVICE
           predicates:
             - Path=/ratings/**
+
     discovery:
       enabled: true

@@ -1,9 +1,9 @@
 package bookmyconsultation.ratingservice.service;
 
-import bookmyconsultation.ratingservice.entity.RatingServiceEntity;
+import bookmyconsultation.ratingservice.entity.RatingEntity;
 
 public interface RatingService {
 
-    public RatingServiceEntity addRating(RatingServiceEntity rating);
+    public RatingEntity addRating(RatingEntity rating);
 
 }

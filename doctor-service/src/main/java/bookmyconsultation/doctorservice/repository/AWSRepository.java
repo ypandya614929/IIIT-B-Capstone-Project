@@ -1,8 +1,8 @@
 package bookmyconsultation.doctorservice.repository;
 
 
-import bookmyconsultation.doctorservice.dto.DetailDoctorServiceDTO;
-import bookmyconsultation.doctorservice.dto.DoctorServiceDTO;
+import bookmyconsultation.doctorservice.dto.DetailDoctorDTO;
+import bookmyconsultation.doctorservice.dto.DoctorDTO;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
@@ -144,7 +144,7 @@ public class AWSRepository {
         sesClient.verifyEmailAddress(req->req.emailAddress(emailId));
     }
 
-    public void sendEmail(DoctorServiceDTO doctor) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
+    public void sendEmail(DoctorDTO doctor) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
         Map<String,Object> templateModel = new HashMap<>();
         templateModel.put("user", doctor);
         Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("userwelcome.ftl");
@@ -152,7 +152,7 @@ public class AWSRepository {
 //        sendSimpleMessage(doctor.getEmailId(),"Welcome Email",htmlBody);
     }
 
-    public void sendVerificationEmail(DetailDoctorServiceDTO doctor) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
+    public void sendVerificationEmail(DetailDoctorDTO doctor) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
         Map<String,Object> templateModel = new HashMap<>();
         templateModel.put("user", doctor);
         Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("userverification.ftl");

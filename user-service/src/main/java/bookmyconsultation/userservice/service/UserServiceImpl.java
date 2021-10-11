@@ -1,23 +1,26 @@
 package bookmyconsultation.userservice.service;
 
-import bookmyconsultation.userservice.dto.UserServiceDTO;
-import bookmyconsultation.userservice.entity.UserServiceEntity;
-import bookmyconsultation.userservice.mapper.UserServiceMapper;
+import bookmyconsultation.userservice.dto.UserDTo;
+import bookmyconsultation.userservice.entity.UserEntity;
+import bookmyconsultation.userservice.exception.UserNotFoundException;
+import bookmyconsultation.userservice.mapper.UserMapper;
 import bookmyconsultation.userservice.repository.AWSRepository;
-import bookmyconsultation.userservice.repository.UserServiceRepository;
+import bookmyconsultation.userservice.repository.UserRepository;
 import freemarker.template.TemplateException;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import javax.mail.MessagingException;
 import java.io.IOException;
 
+
+// This class implements defined methods in UserService interface
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserServiceRepository userServiceRepository;
+    UserRepository userRepository;
 
     @Autowired
     AWSRepository awsRepository;
@@ -26,22 +29,22 @@ public class UserServiceImpl implements UserService {
     Producer<String, String> producer;
 
     @Override
-    public UserServiceDTO createUser(UserServiceDTO userDTO) throws TemplateException, IOException, MessagingException {
-        UserServiceEntity userEntity= UserServiceMapper.DTOToEntity(userDTO);
-        userServiceRepository.save(userEntity);
-        UserServiceDTO savedUserDTO = UserServiceMapper.EntityToDTO(userEntity);
+    public UserDTo createUser(UserDTo userDTO) throws TemplateException, IOException, MessagingException {
+        UserEntity userEntity= UserMapper.DTOToEntity(userDTO);
+        userRepository.save(userEntity);
+        UserDTo savedUserDTO = UserMapper.EntityToDTO(userEntity);
         String message = savedUserDTO.toString();
-//        producer.send(new ProducerRecord<>("message","message", message));
+        producer.send(new ProducerRecord<>("message","USER_SERVICE", message));
         awsRepository.sendEmail(savedUserDTO);
         return savedUserDTO;
     }
 
     @Override
-    public UserServiceEntity getUser(String userId) {
-        if (userServiceRepository.existsById(userId)) {
-            UserServiceEntity userEntity = userServiceRepository.findById(userId).get();
+    public UserEntity getUser(String userId) {
+        if (userRepository.existsById(userId)) {
+            UserEntity userEntity = userRepository.findById(userId).get();
             return userEntity;
         }
-        return null;
+        throw new UserNotFoundException();
     }
 }

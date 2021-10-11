@@ -1,7 +1,7 @@
 package bookmyconsultation.userservice.repository;
 
 
-import bookmyconsultation.userservice.dto.UserServiceDTO;
+import bookmyconsultation.userservice.dto.UserDTo;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
@@ -35,6 +35,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+
+// this class is used to communicate with AWS
+// for S3 and SES
 @Component
 public class AWSRepository {
 
@@ -63,7 +66,6 @@ public class AWSRepository {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.US_EAST_1)
                 .build();
-
         return s3Client;
     }
 
@@ -75,7 +77,6 @@ public class AWSRepository {
                 .credentialsProvider(staticCredentialsProvider)
                 .region(software.amazon.awssdk.regions.Region.US_EAST_1)
                 .build();
-
         return sesClient;
     }
 
@@ -99,7 +100,6 @@ public class AWSRepository {
             while ((len = is.read(buffer, 0, buffer.length)) != -1) {
                 outputStream.write(buffer, 0, len);
             }
-
             return outputStream;
         } catch (IOException ioException) {
             System.out.println("IOException: " + ioException.getMessage());
@@ -110,26 +110,20 @@ public class AWSRepository {
             System.out.println("AmazonClientException Message: " + clientException.getMessage());
             throw clientException;
         }
-
         return null;
     }
 
     public List<String> listFiles(String userId) {
-
         ListObjectsRequest listObjectsRequest =
                 new ListObjectsRequest()
                         .withBucketName(BUCKET_NAME);
-
         List<String> keys = new ArrayList<>();
-
         ObjectListing objects = s3Client.listObjects(listObjectsRequest);
-
         while (true) {
             List<S3ObjectSummary> objectSummaries = objects.getObjectSummaries();
             if (objectSummaries.size() < 1) {
                 break;
             }
-
             for (S3ObjectSummary item : objectSummaries) {
                 if (!item.getKey().endsWith("/") && item.getKey().startsWith(userId))
                     keys.add(item.getKey().split("/")[1]);
@@ -143,7 +137,7 @@ public class AWSRepository {
         sesClient.verifyEmailAddress(req->req.emailAddress(emailId));
     }
 
-    public void sendEmail(UserServiceDTO user) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
+    public void sendEmail(UserDTo user) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
         Map<String,Object> templateModel = new HashMap<>();
         templateModel.put("user", user);
         Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("userwelcome.ftl");

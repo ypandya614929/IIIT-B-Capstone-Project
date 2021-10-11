@@ -1,6 +1,7 @@
 package bookmyconsultation.appointmentservice.repository;
 
 
+import bookmyconsultation.appointmentservice.dto.UserDetailDTO;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
@@ -68,21 +69,14 @@ public class AWSRepository {
         sesClient.verifyEmailAddress(req->req.emailAddress(emailId));
     }
 
-//    public void sendEmail(bookmyconsultation.doctorservice.dto.AvailabilityServiceResponseDTO doctor) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
-//        Map<String,Object> templateModel = new HashMap<>();
-//        templateModel.put("user", doctor);
-//        Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("userwelcome.ftl");
-//        String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerTemplate,templateModel);
-////        sendSimpleMessage(doctor.getEmailId(),"Welcome Email",htmlBody);
-//    }
+    public void sendEmail(UserDetailDTO userDetailDTO) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
+        Map<String,Object> templateModel = new HashMap<>();
+        templateModel.put("user", userDetailDTO);
+        Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("appointment.ftl");
+        String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerTemplate,templateModel);
+        sendSimpleMessage(userDetailDTO.getEmailId(),"Welcome Email",htmlBody);
+    }
 
-//    public void sendVerificationEmail(bookmyconsultation.doctorservice.dto.AvailabilityServiceRequestDTO doctor) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
-//        Map<String,Object> templateModel = new HashMap<>();
-//        templateModel.put("user", doctor);
-//        Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("userverification.ftl");
-//        String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerTemplate,templateModel);
-//        sendSimpleMessage(doctor.getEmailId(),"Verification Email",htmlBody);
-//    }
 
     private void sendSimpleMessage(String toEmail, String subject, String body) throws MessagingException, javax.mail.MessagingException {
         Properties props = System.getProperties();
@@ -106,4 +100,5 @@ public class AWSRepository {
             transport.close();
         }
     }
+
 }
