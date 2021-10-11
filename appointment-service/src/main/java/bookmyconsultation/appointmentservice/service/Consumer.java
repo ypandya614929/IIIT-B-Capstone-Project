@@ -41,14 +41,14 @@ public class Consumer {
             System.out.println(topic);
         }
 
-//        while(true) {
-//            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-//            for(ConsumerRecord<String, String> record : records) {
-//                if(record.key().equalsIgnoreCase("PAYMENT_SERVICE")){
-//                    appointmentServiceImpl.updateAppointmentStatus(record.value());
-//                }
-//            }
-//        }
+       while(true) {
+           ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+           for(ConsumerRecord<String, String> record : records) {
+               if(record.key().equalsIgnoreCase("PAYMENT_SERVICE")){
+                   appointmentServiceImpl.updateAppointmentStatus(record.value());
+               }
+           }
+       }
     }
 
 }
