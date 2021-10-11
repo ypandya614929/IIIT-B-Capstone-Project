@@ -17,13 +17,16 @@ public class RatingEntity {
 
     private int rating;
 
+    private String comments;
+
     public RatingEntity() {
     }
 
-    public RatingEntity(String id, String doctorId, int rating) {
+    public RatingEntity(String id, String doctorId, int rating, String comments) {
         this.id = id;
         this.doctorId = doctorId;
         this.rating = rating;
+        this.comments = comments;
     }
 
     public String getId() {
@@ -50,13 +53,21 @@ public class RatingEntity {
         this.rating = rating;
     }
 
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
-        return "RatingServiceEntity{" +
+        return "RatingEntity{" +
                 "id='" + id + '\'' +
                 ", doctorId='" + doctorId + '\'' +
                 ", rating=" + rating +
+                ", comments='" + comments + '\'' +
                 '}';
     }
-
 }

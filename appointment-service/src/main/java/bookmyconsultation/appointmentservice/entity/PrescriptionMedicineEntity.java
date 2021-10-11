@@ -76,13 +76,13 @@ public class PrescriptionMedicineEntity {
 
     @Override
     public String toString() {
-        return "PrescriptionMedicineEntity{" +
+        return "{" +
                 "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", dosage='" + dosage + '\'' +
-                ", duration='" + duration + '\'' +
-                ", frequency='" + frequency + '\'' +
-                ", remarks='" + remarks + '\'' +
-                '}';
+                " | type='" + type + '\'' +
+                " | dosage='" + dosage + '\'' +
+                " | duration='" + duration + '\'' +
+                " | frequency='" + frequency + '\'' +
+                " | remarks='" + remarks + '\'' +
+                "}";
     }
 }

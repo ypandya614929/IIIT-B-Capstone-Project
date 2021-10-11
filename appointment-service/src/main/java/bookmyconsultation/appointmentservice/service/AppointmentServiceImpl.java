@@ -9,11 +9,11 @@ import bookmyconsultation.appointmentservice.entity.PrescriptionEntity;
 import bookmyconsultation.appointmentservice.exception.PendingPaymentException;
 import bookmyconsultation.appointmentservice.exception.ResouceNotFound;
 import bookmyconsultation.appointmentservice.mapper.AppointmentServiceMapper;
-import bookmyconsultation.appointmentservice.repository.AWSRepository;
 import bookmyconsultation.appointmentservice.repository.AppointmentRepository;
 import bookmyconsultation.appointmentservice.repository.PrescriptionRepository;
 import freemarker.template.TemplateException;
 import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +21,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -40,9 +42,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     private RestTemplate restTemplate;
 
     @Autowired
-    AWSRepository awsRepository;
-
-    @Autowired
     Producer<String, String> producer;
 
     @Override
@@ -54,9 +53,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentServiceRepository.save(appointmentServiceEntity);
         availabilityServiceImpl.updateAvailability(appointmentServiceEntity.getDoctorId(), appointmentServiceEntity.getAppointmentDate(), appointmentServiceEntity.getTimeSlot());
         AppointmentResponseDTO savedAppointmentServiceResponseDTO = AppointmentServiceMapper.EntityToDTO(appointmentServiceEntity);
-        String message = savedAppointmentServiceResponseDTO.toString();
-//        producer.send(new ProducerRecord<>("message","APPOINTMENT_SERVICE", message));
-        awsRepository.sendEmail(userDetailDTO);
+        String message = appointmentServiceEntity.toString();
+        producer.send(new ProducerRecord<>("message","APPOINTMENT_SERVICE", message));
         return savedAppointmentServiceResponseDTO;
     }
 
@@ -96,6 +94,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         prescriptionServiceEntity.setUserId(prescriptionserviceRequestDTO.getUserId());
         prescriptionServiceEntity.setDiagnosis(prescriptionserviceRequestDTO.getDiagnosis());
         prescriptionServiceEntity.setMedicineList(prescriptionserviceRequestDTO.getMedicineList());
+        String message = prescriptionServiceEntity.toString();
+        UserDetailDTO userDetailDTO = getUserDetail(prescriptionserviceRequestDTO.getUserId());
+        message += ", userEmailId=" + userDetailDTO.getEmailId();
+        producer.send(new ProducerRecord<>("message","PRESCRIPTION", message));
         prescriptionServiceRepository.save(prescriptionServiceEntity);
     }
 
@@ -105,6 +107,22 @@ public class AppointmentServiceImpl implements AppointmentService {
         // calling payment service API using rest template
         UserDetailDTO userDetailDTO = restTemplate.getForObject(USER_SERVICE_URI, UserDetailDTO.class);
         return userDetailDTO;
+    }
+
+    public void updateAppointmentStatus(String message){
+        message = message.replace("PaymentServiceResponseDTO", "");
+        message = message.replace("{", "").replace("}", "").replace("'", "");
+        Map<String,String> map = new LinkedHashMap<String,String>();
+        for(String keyValue: message.split(", ")) {
+            String[] parts = keyValue.split("=", 2);
+            map.put(parts[0], parts[1]);
+        }
+        String appointmentId = map.get("appointmentId");
+        if (appointmentServiceRepository.existsById(appointmentId)) {
+            AppointmentEntity appointmentServiceEntity = appointmentServiceRepository.findById(appointmentId).get();
+            appointmentServiceEntity.setStatus("Confirmed");
+            appointmentServiceRepository.save(appointmentServiceEntity);
+        }
     }
 
 }

@@ -4,12 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p>Hi ${user.firstName}</p>
-<p>Congratulations !!! Your Appointment is confirmed</p>
+<p>Hi ${firstName}</p>
+<p>Your Registration is ${status} by ${approvedBy}.</p>
+
+Approver Comment : ${approverComments}
 
 <p>Regards,</p>
 <p>
-    <em>Upgrad</em> <br />
+<em>Upgrad</em> <br />
 </p>
 </body>
 </html>

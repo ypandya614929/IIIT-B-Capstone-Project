@@ -5,6 +5,7 @@ import bookmyconsultation.paymentservice.entity.PaymentEntity;
 import bookmyconsultation.paymentservice.mapper.PaymentMapper;
 import bookmyconsultation.paymentservice.repository.PaymentRepository;
 import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +20,11 @@ public class PaymentServiceImpl implements  PaymentService{
 
     @Override
     public PaymentResponseDTO makePayment(String appointmentId) {
-        if (paymentServiceRepository.existsById(appointmentId)){
-            PaymentEntity paymentServiceEntity = paymentServiceRepository.findById(appointmentId).get();
-            paymentServiceEntity.setStatus("Confirmed");
-            paymentServiceRepository.save(paymentServiceEntity);
-            PaymentResponseDTO paymentServiceResponseDTO = PaymentMapper.EntityToDTO(paymentServiceEntity);
-            String message = paymentServiceResponseDTO.toString();
-//        producer.send(new ProducerRecord<>("message","message", message));
-            return paymentServiceResponseDTO;
-        }
-        return null;
+        PaymentEntity paymentServiceEntity = PaymentMapper.DTOToEntity(appointmentId);
+        paymentServiceRepository.save(paymentServiceEntity);
+        PaymentResponseDTO paymentServiceResponseDTO = PaymentMapper.EntityToDTO(paymentServiceEntity);
+        String message = paymentServiceResponseDTO.toString();
+        producer.send(new ProducerRecord<>("payment","PAYMENT_SERVICE", message));
+        return paymentServiceResponseDTO;
     }
 }

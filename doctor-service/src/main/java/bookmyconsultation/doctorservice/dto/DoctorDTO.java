@@ -144,7 +144,7 @@ public class DoctorDTO {
 
     @Override
     public String toString() {
-        return "DoctorServiceDTO{" +
+        return "DoctorDTO{" +
                 "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

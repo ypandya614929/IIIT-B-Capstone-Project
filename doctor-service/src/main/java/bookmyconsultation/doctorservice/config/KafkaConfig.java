@@ -13,9 +13,9 @@ public class KafkaConfig {
     @Bean
     public  Producer<String, String> setUpKafkaPropoerties() {
         Properties properties = new Properties();
-        //Update the IP adress of Kafka server here//
+        //Update the IP address of Kafka server here//
 
-        properties.put("bootstrap.servers", "54.159.178.122:9092");
+        properties.put("bootstrap.servers", "23.20.158.142:9092");
         properties.put("acks", "all");
         properties.put("retries", 0);
         properties.put("linger.ms", 0);

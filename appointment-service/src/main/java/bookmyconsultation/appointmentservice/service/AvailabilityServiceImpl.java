@@ -3,24 +3,21 @@ package bookmyconsultation.appointmentservice.service;
 import bookmyconsultation.appointmentservice.dto.AvailabilityRequestDTO;
 import bookmyconsultation.appointmentservice.dto.AvailabilityResponseDTO;
 import bookmyconsultation.appointmentservice.entity.AvailabilityEntity;
-import bookmyconsultation.appointmentservice.repository.AWSRepository;
 import bookmyconsultation.appointmentservice.repository.AvailabilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.kafka.clients.producer.Producer;
-
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 
 @Service
 public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Autowired
     AvailabilityRepository availabilityServiceRepository;
-
-    @Autowired
-    AWSRepository awsRepository;
 
     @Autowired
     Producer<String, String> producer;
@@ -33,7 +30,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 AvailabilityEntity availability = new AvailabilityEntity();
                 availability.setBooked(false);
                 availability.setDoctorId(doctorId);
-                availability.setAvailabilityDate(date);
+                availability.setAvailabilityDate(Date.valueOf(date));
                 availability.setTimeSlot(timeslot);
                 deleteAvailability(availability.getDoctorId(), availability.getAvailabilityDate(), availability.getTimeSlot());
                 availabilityServiceRepository.save(availability);
@@ -55,7 +52,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             } else {
                 List<String> timeslots = new ArrayList<>();
                 timeslots.add(availabilityEntity.getTimeSlot());
-                availabilityMap.put(availabilityEntity.getAvailabilityDate(), timeslots);
+                availabilityMap.put(String.valueOf(availabilityEntity.getAvailabilityDate()), timeslots);
             }
         }
         AvailabilityResponseDTO availabilityServiceResponseDTO = new AvailabilityResponseDTO();
@@ -64,14 +61,14 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         return availabilityServiceResponseDTO;
     }
 
-    public void deleteAvailability(String doctorId, String appointmentDate, String timeslot){
+    public void deleteAvailability(String doctorId, Date appointmentDate, String timeslot){
         List<AvailabilityEntity> availabilityList = availabilityServiceRepository.findByDoctorIdAndAvailabilityDateAndTimeSlot(doctorId, appointmentDate, timeslot);
         for(AvailabilityEntity availabilityServiceEntity: availabilityList){
             availabilityServiceRepository.delete(availabilityServiceEntity);
         }
     }
 
-    public void updateAvailability(String doctorId, String appointmentDate, String timeslot){
+    public void updateAvailability(String doctorId, Date appointmentDate, String timeslot){
         List<AvailabilityEntity> availabilityList = availabilityServiceRepository.findByDoctorIdAndAvailabilityDateAndTimeSlot(doctorId, appointmentDate, timeslot);
         for(AvailabilityEntity availabilityServiceEntity: availabilityList){
             availabilityServiceEntity.setBooked(true);

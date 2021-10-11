@@ -1,7 +1,6 @@
 package bookmyconsultation.appointmentservice.controller;
 
 import bookmyconsultation.appointmentservice.dto.*;
-import bookmyconsultation.appointmentservice.repository.AWSRepository;
 import bookmyconsultation.appointmentservice.service.AppointmentService;
 import bookmyconsultation.appointmentservice.service.AvailabilityService;
 import freemarker.template.TemplateException;
@@ -29,9 +28,6 @@ public class AppointmentServiceController {
 
     @Autowired
     AppointmentService appointmentService;
-
-    @Autowired
-    AWSRepository awsRepository;
 
     @PostMapping(value = "/doctor/{doctorId}/availability", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -73,12 +69,6 @@ public class AppointmentServiceController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity savePrescription(@RequestBody PrescriptionRequestDTO prescriptionserviceRequestDTO){
         appointmentService.savePrescription(prescriptionserviceRequestDTO);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/verify")
-    public ResponseEntity verifyEmail(@RequestParam("email") String emailId){
-        awsRepository.verifyEmail(emailId);
         return ResponseEntity.ok().build();
     }
 

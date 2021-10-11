@@ -1,27 +1,28 @@
 package bookmyconsultation.appointmentservice.entity;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.sql.Date;
+import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Date;
 
-@Document(collection = "appointment")
+@Table(name = "Appointment")
+@Entity
 public class AppointmentEntity {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-//    @Column(name = "appointment_id")
+    @Column(name = "appointment_id")
+    @NotNull
     private String id;
 
     @Column(name = "appointment_date")
-    private String appointmentDate;
+    private Date appointmentDate;
 
     @Column(name = "created_date")
-    private String createdDate;
+    private Timestamp createdDate;
 
     @Column(name = "doctor_id")
     private String doctorId;
@@ -53,7 +54,7 @@ public class AppointmentEntity {
     public AppointmentEntity() {
     }
 
-    public AppointmentEntity(String id, String appointmentDate, String createdDate, String doctorId, String priorMedicalHistory, String status, String symptoms, String timeSlot, String userId, String userEmailId, String userName, String doctorName) {
+    public AppointmentEntity(@NotNull String id, Date appointmentDate, Timestamp createdDate, String doctorId, String priorMedicalHistory, String status, String symptoms, String timeSlot, String userId, String userEmailId, String userName, String doctorName) {
         this.id = id;
         this.appointmentDate = appointmentDate;
         this.createdDate = createdDate;
@@ -76,19 +77,19 @@ public class AppointmentEntity {
         this.id = id;
     }
 
-    public String getAppointmentDate() {
+    public Date getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(String appointmentDate) {
+    public void setAppointmentDate(Date appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public String getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -166,7 +167,7 @@ public class AppointmentEntity {
 
     @Override
     public String toString() {
-        return "AppointmentServiceEntity{" +
+        return "AppointmentEntity{" +
                 "id='" + id + '\'' +
                 ", appointmentDate='" + appointmentDate + '\'' +
                 ", createdDate='" + createdDate + '\'' +
