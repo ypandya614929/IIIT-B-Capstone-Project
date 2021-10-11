@@ -1,14 +1,14 @@
 package bookmyconsultation.appointmentservice.mapper;
 
-import bookmyconsultation.appointmentservice.dto.AppointmentServiceRequestDTO;
-import bookmyconsultation.appointmentservice.dto.AppointmentServiceResponseDTO;
-import bookmyconsultation.appointmentservice.entity.AppointmentServiceEntity;
+import bookmyconsultation.appointmentservice.dto.AppointmentRequestDTO;
+import bookmyconsultation.appointmentservice.dto.AppointmentResponseDTO;
+import bookmyconsultation.appointmentservice.entity.AppointmentEntity;
 
 
 public class AppointmentServiceMapper {
 
-    public static AppointmentServiceEntity DTOToEntity(AppointmentServiceRequestDTO appointmentServiceRequestDTO){
-        AppointmentServiceEntity appointmentServiceEntity = new AppointmentServiceEntity();
+    public static AppointmentEntity DTOToEntity(AppointmentRequestDTO appointmentServiceRequestDTO){
+        AppointmentEntity appointmentServiceEntity = new AppointmentEntity();
         appointmentServiceEntity.setDoctorId(appointmentServiceRequestDTO.getDoctorId());
         appointmentServiceEntity.setUserId(appointmentServiceRequestDTO.getUserId());
         appointmentServiceEntity.setAppointmentDate(appointmentServiceRequestDTO.getAppointmentDate());
@@ -17,8 +17,8 @@ public class AppointmentServiceMapper {
         return appointmentServiceEntity;
     }
 
-    public static AppointmentServiceResponseDTO EntityToDTO(AppointmentServiceEntity appointmentServiceEntity){
-        AppointmentServiceResponseDTO appointmentServiceResponseDTO = new AppointmentServiceResponseDTO();
+    public static AppointmentResponseDTO EntityToDTO(AppointmentEntity appointmentServiceEntity){
+        AppointmentResponseDTO appointmentServiceResponseDTO = new AppointmentResponseDTO();
         appointmentServiceResponseDTO.setAppointmentId(appointmentServiceEntity.getId());
         appointmentServiceResponseDTO.setAppointmentDate(appointmentServiceEntity.getAppointmentDate());
         appointmentServiceResponseDTO.setDoctorId(appointmentServiceEntity.getDoctorId());

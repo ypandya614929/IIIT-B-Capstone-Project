@@ -1,9 +1,9 @@
 package bookmyconsultation.paymentservice.service;
 
-import bookmyconsultation.paymentservice.dto.PaymentServiceResponseDTO;
+import bookmyconsultation.paymentservice.dto.PaymentResponseDTO;
 
 public interface PaymentService {
 
-    public PaymentServiceResponseDTO makePayment(String appointmentId);
+    public PaymentResponseDTO makePayment(String appointmentId);
 
 }

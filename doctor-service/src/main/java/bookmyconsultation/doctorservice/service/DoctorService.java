@@ -1,9 +1,9 @@
 package bookmyconsultation.doctorservice.service;
 
-import bookmyconsultation.doctorservice.dto.DetailDoctorServiceDTO;
-import bookmyconsultation.doctorservice.dto.DoctorServiceDTO;
-import bookmyconsultation.doctorservice.dto.UpdateDoctorServiceDTO;
-import bookmyconsultation.doctorservice.entity.DoctorServiceEntity;
+import bookmyconsultation.doctorservice.dto.DetailDoctorDTO;
+import bookmyconsultation.doctorservice.dto.DoctorDTO;
+import bookmyconsultation.doctorservice.dto.UpdateDoctorDTO;
+import bookmyconsultation.doctorservice.entity.DoctorEntity;
 import freemarker.template.TemplateException;
 
 import javax.mail.MessagingException;
@@ -12,11 +12,11 @@ import java.util.List;
 
 public interface DoctorService {
 
-    public DoctorServiceDTO createDoctor(DoctorServiceDTO doctorServiceDTO) throws TemplateException, IOException, MessagingException;
+    public DoctorDTO createDoctor(DoctorDTO doctorServiceDTO) throws TemplateException, IOException, MessagingException;
 
-    public DoctorServiceEntity getDoctor(String doctorId);
+    public DoctorEntity getDoctor(String doctorId);
 
-    public DetailDoctorServiceDTO updateDoctor(String doctorId, UpdateDoctorServiceDTO updateDoctorServiceDTO, String status) throws TemplateException, IOException, MessagingException;
+    public DetailDoctorDTO updateDoctor(String doctorId, UpdateDoctorDTO updateDoctorServiceDTO, String status) throws TemplateException, IOException, MessagingException;
 
-    public List<DoctorServiceEntity> getDoctorByStatusAndSpeciality(String status, String speciality);
+    public List<DoctorEntity> getDoctorByStatusAndSpeciality(String status, String speciality);
 }
