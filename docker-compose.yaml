@@ -127,6 +127,22 @@ services:
       - bmc-gateway
       - appointment-service
 
+  security-provider:
+    build: security-provider
+    container_name: securityprovider
+    image: bmc/security-provider:1.0.0
+    ports:
+      - "8088:8088"
+    networks:
+      - book-my-consultation-nw
+    environment:
+      REGISTRY_HOST_NAME: service-registry
+      REGISTRY_PORT: 8761
+      SECURITY_PROVIDER_SVC_PORT: 8088
+    depends_on:
+      - service-registry
+      - bmc-gateway
+
 
 networks:
   book-my-consultation-nw:

@@ -36,7 +36,7 @@ public class UpdateDoctorDTO {
 
     @Override
     public String toString() {
-        return "UpdateDoctorServiceDTO{" +
+        return "UpdateDoctorDTO{" +
                 "approvedBy='" + approvedBy + '\'' +
                 ", approverComments='" + approverComments + '\'' +
                 '}';

@@ -9,6 +9,7 @@ import bookmyconsultation.doctorservice.mapper.DoctorMapper;
 import bookmyconsultation.doctorservice.repository.AWSRepository;
 import bookmyconsultation.doctorservice.repository.DoctorRepository;
 import freemarker.template.TemplateException;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.kafka.clients.producer.Producer;
@@ -36,7 +37,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctorServiceRepository.save(doctorEntity);
         DoctorDTO savedDoctorDTO = DoctorMapper.EntityToDTO(doctorEntity);
         String message = savedDoctorDTO.toString();
-//        producer.send(new ProducerRecord<>("message","message", message));
+        producer.send(new ProducerRecord<>("message","DOCTOR_SERVICE_CREATE", message));
         awsRepository.sendEmail(savedDoctorDTO);
         return savedDoctorDTO;
     }
@@ -57,8 +58,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctorServiceRepository.save(doctorEntity);
         DetailDoctorDTO detailDoctorServiceDTO = DoctorMapper.EntityToDetailDTO(doctorEntity);
         String message = detailDoctorServiceDTO.toString();
-//        producer.send(new ProducerRecord<String, String>("message", "DOCTOR_SERVICE", message));
-        awsRepository.sendVerificationEmail(detailDoctorServiceDTO);
+        producer.send(new ProducerRecord<String, String>("message", "DOCTOR_SERVICE_UPDATE", message));
         return detailDoctorServiceDTO;
     }
 
@@ -82,5 +82,13 @@ public class DoctorServiceImpl implements DoctorService {
             doctorList = doctorServiceRepository.findAll();
         }
         return doctorList;
+    }
+
+    public void updateDoctorRatings(String doctorId, float rating){
+        if (doctorServiceRepository.existsById(doctorId)) {
+            DoctorEntity doctorEntity = doctorServiceRepository.findById(doctorId).get();
+            doctorEntity.setAverageRating(rating);
+            doctorServiceRepository.save(doctorEntity);
+        }
     }
 }

@@ -153,7 +153,7 @@ public class DetailDoctorDTO {
 
     @Override
     public String toString() {
-        return "DetailDoctorServiceDTO{" +
+        return "DetailDoctorDTO{" +
                 "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

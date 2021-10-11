@@ -1,15 +1,5 @@
-package bookmyconsultation.appointmentservice.repository;
+package bookmyconsultation.notificationservice.repository;
 
-
-import bookmyconsultation.appointmentservice.dto.UserDetailDTO;
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -17,31 +7,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.services.ses.SesClient;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
 import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+
 @Component
 public class AWSRepository {
 
-    private String ACCESS_KEY = "AKIAX6XIW2S4DDVF3CWU";
-    private String ACCESS_SECRET = "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";
-    private String SMTP_ACCESS_KEY = "AKIAX6XIW2S4LB2MVF56";
-    private String SMTP_ACCESS_SECRET = "BOqVHGaIB+jasFAqSgiE6MVDB7CDlfNIFmpJkwamyjut";
+    private String ACCESS_KEY = "AKIAX6XIW2S4JCQQTSVX";
+    private String ACCESS_SECRET = "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";
+    private String SMTP_ACCESS_KEY = "AKIAX6XIW2S4FB2QL4GT";
+    private String SMTP_ACCESS_SECRET = "BF+n4UbWIryXqW0OQNZOc467dneFAFq4i4g3RQS/EQs5";
     private SesClient sesClient;
     private final FreeMarkerConfigurer freeMarkerConfig;
     private String FROM_EMAIL = "yashp6149@gmail.com";
@@ -52,6 +39,7 @@ public class AWSRepository {
     public AWSRepository(FreeMarkerConfigurer freeMarkerConfig) {
         this.freeMarkerConfig = freeMarkerConfig;
     }
+
 
     @PostConstruct
     public SesClient createSESClient() {
@@ -69,12 +57,39 @@ public class AWSRepository {
         sesClient.verifyEmailAddress(req->req.emailAddress(emailId));
     }
 
-    public void sendEmail(UserDetailDTO userDetailDTO) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
+    public void sendDoctorUpdateEmail(Map<String,String> parseMap) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
         Map<String,Object> templateModel = new HashMap<>();
-        templateModel.put("user", userDetailDTO);
+        templateModel.put("firstName", parseMap.get("firstName"));
+        templateModel.put("approvedBy", parseMap.get("approvedBy"));
+        templateModel.put("status", parseMap.get("status"));
+        templateModel.put("approverComments", parseMap.get("approverComments"));
+        Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("doctorupdate.ftl");
+        String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerTemplate,templateModel);
+        sendSimpleMessage(parseMap.get("emailId"),"Verification Email",htmlBody);
+    }
+
+    public void sendAppointmentConfirmationEmail(Map<String,String> parseMap) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
+        Map<String,Object> templateModel = new HashMap<>();
+        templateModel.put("appointmentDate", parseMap.get("appointmentDate"));
+        templateModel.put("doctorName", parseMap.get("doctorName"));
+        templateModel.put("timeSlot", parseMap.get("timeSlot"));
+        templateModel.put("userName", parseMap.get("userName"));
+        templateModel.put("status", parseMap.get("status"));
         Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("appointment.ftl");
         String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerTemplate,templateModel);
-        sendSimpleMessage(userDetailDTO.getEmailId(),"Welcome Email",htmlBody);
+        sendSimpleMessage(parseMap.get("userEmailId"),"Appointment Email",htmlBody);
+    }
+
+    public void sendPrescriptionEmail(Map<String,String> parseMap) throws IOException, TemplateException, MessagingException, javax.mail.MessagingException {
+        Map<String,Object> templateModel = new HashMap<>();
+        templateModel.put("doctorId", parseMap.get("doctorId"));
+        templateModel.put("doctorName", parseMap.get("doctorName"));
+        templateModel.put("appointmentId", parseMap.get("appointmentId"));
+        templateModel.put("diagnosis", parseMap.get("diagnosis"));
+        templateModel.put("medicineList", parseMap.get("medicineList"));
+        Template freeMarkerTemplate = freeMarkerConfig.getConfiguration().getTemplate("prescription.ftl");
+        String htmlBody = FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerTemplate,templateModel);
+        sendSimpleMessage(parseMap.get("userEmailId"),"Your Prescription is Ready",htmlBody);
     }
 
 

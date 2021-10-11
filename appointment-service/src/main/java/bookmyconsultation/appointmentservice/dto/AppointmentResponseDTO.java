@@ -14,6 +14,8 @@ public class AppointmentResponseDTO {
 
     private String doctorId;
 
+    private String doctorName;
+
     private String userId;
 
     private String timeSlot;
@@ -25,9 +27,10 @@ public class AppointmentResponseDTO {
     public AppointmentResponseDTO() {
     }
 
-    public AppointmentResponseDTO(String appointmentId, String doctorId, String userId, String timeSlot, String appointmentDate, String status) {
+    public AppointmentResponseDTO(String appointmentId, String doctorId, String doctorName, String userId, String timeSlot, String status, String appointmentDate) {
         this.appointmentId = appointmentId;
         this.doctorId = doctorId;
+        this.doctorName = doctorName;
         this.userId = userId;
         this.timeSlot = timeSlot;
         this.status = status;
@@ -48,6 +51,14 @@ public class AppointmentResponseDTO {
 
     public void setDoctorId(String doctorId) {
         this.doctorId = doctorId;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
     }
 
     public String getUserId() {
@@ -84,9 +95,10 @@ public class AppointmentResponseDTO {
 
     @Override
     public String toString() {
-        return "AppointmentServiceResponseDTO{" +
+        return "AppointmentResponseDTO{" +
                 "appointmentId='" + appointmentId + '\'' +
                 ", doctorId='" + doctorId + '\'' +
+                ", doctorName='" + doctorName + '\'' +
                 ", userId='" + userId + '\'' +
                 ", timeSlot='" + timeSlot + '\'' +
                 ", status='" + status + '\'' +

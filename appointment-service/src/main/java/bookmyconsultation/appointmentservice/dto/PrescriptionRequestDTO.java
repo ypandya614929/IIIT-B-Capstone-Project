@@ -1,7 +1,5 @@
 package bookmyconsultation.appointmentservice.dto;
 
-import bookmyconsultation.appointmentservice.entity.PrescriptionMedicineEntity;
-
 import java.util.HashMap;
 import java.util.List;
 

@@ -38,12 +38,12 @@ public class DoctorEntity {
 
     private String verificationDate;
 
-    private int averageRating;
+    private float averageRating;
 
     public DoctorEntity() {
     }
 
-    public DoctorEntity(String id, String firstName, String lastName, String speciality, String dob, String mobile, String emailId, String pan, String status, String approvedBy, String approverComments, String registrationDate, String verificationDate, int averageRating) {
+    public DoctorEntity(String id, String firstName, String lastName, String speciality, String dob, String mobile, String emailId, String pan, String status, String approvedBy, String approverComments, String registrationDate, String verificationDate, float averageRating) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -164,17 +164,17 @@ public class DoctorEntity {
         this.verificationDate = verificationDate;
     }
 
-    public int getAverageRating() {
+    public float getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(int averageRating) {
+    public void setAverageRating(float averageRating) {
         this.averageRating = averageRating;
     }
 
     @Override
     public String toString() {
-        return "DoctorServiceEntity{" +
+        return "DoctorEntity{" +
                 "id='" + id + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

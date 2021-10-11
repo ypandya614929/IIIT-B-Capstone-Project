@@ -1,10 +1,12 @@
 package bookmyconsultation.appointmentservice.entity;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -90,8 +92,19 @@ public class PrescriptionEntity {
         this.diagnosis = diagnosis;
     }
 
-    public List<HashMap<String, String>> getMedicineList() {
-        return medicineList;
+    public String getMedicineList() {
+        List<String> medicalData = new ArrayList<>();
+        for(HashMap<String ,String> entry: medicineList){
+            PrescriptionMedicineEntity prescriptionMedicineEntity = new PrescriptionMedicineEntity();
+            prescriptionMedicineEntity.setDosage(entry.get("dosage"));
+            prescriptionMedicineEntity.setDuration(entry.get("duration"));
+            prescriptionMedicineEntity.setName(entry.get("name"));
+            prescriptionMedicineEntity.setFrequency(entry.get("frequency"));
+            prescriptionMedicineEntity.setRemarks(entry.get("remarks"));
+            prescriptionMedicineEntity.setType(entry.get("type"));
+            medicalData.add(prescriptionMedicineEntity.toString());
+        }
+        return StringUtils.join(medicalData, " | ");
     }
 
     public void setMedicineList(List<HashMap<String, String>> medicineList) {
@@ -107,7 +120,7 @@ public class PrescriptionEntity {
                 ", doctorName='" + doctorName + '\'' +
                 ", appointmentId='" + appointmentId + '\'' +
                 ", diagnosis='" + diagnosis + '\'' +
-                ", medicineList=" + medicineList +
+                ", medicineList=" + this.getMedicineList() +
                 '}';
     }
 }

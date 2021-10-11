@@ -1,29 +1,27 @@
 package bookmyconsultation.appointmentservice.entity;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Date;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.sql.Date;
 
 
-@Document(collection = "availability")
+@Table(name = "Availability")
+@Entity
 public class AvailabilityEntity {
 
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull
+    private int id;
 
     @Column(name = "availability_date")
-    private String availabilityDate;
+    private Date availabilityDate;
 
     @Column(name = "doctor_id")
     private String doctorId;
 
     @Column(name="is_booked")
+    @NotNull
     private boolean isBooked;
 
     @Column(name = "time_slot")
@@ -32,7 +30,7 @@ public class AvailabilityEntity {
     public AvailabilityEntity() {
     }
 
-    public AvailabilityEntity(String id, String availabilityDate, String doctorId, boolean isBooked, String timeSlot) {
+    public AvailabilityEntity(@NotNull int id, Date availabilityDate, String doctorId, boolean isBooked, String timeSlot) {
         this.id = id;
         this.availabilityDate = availabilityDate;
         this.doctorId = doctorId;
@@ -40,19 +38,19 @@ public class AvailabilityEntity {
         this.timeSlot = timeSlot;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NotNull int id) {
         this.id = id;
     }
 
-    public String getAvailabilityDate() {
+    public Date getAvailabilityDate() {
         return availabilityDate;
     }
 
-    public void setAvailabilityDate(String availabilityDate) {
+    public void setAvailabilityDate(Date availabilityDate) {
         this.availabilityDate = availabilityDate;
     }
 

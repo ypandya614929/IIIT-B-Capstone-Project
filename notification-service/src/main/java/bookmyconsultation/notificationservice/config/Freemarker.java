@@ -1,4 +1,4 @@
-package bookmyconsultation.appointmentservice.config;
+package bookmyconsultation.notificationservice.config;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import freemarker.cache.ClassTemplateLoader;

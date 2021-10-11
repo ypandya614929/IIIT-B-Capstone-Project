@@ -35,5 +35,10 @@ spring:
           predicates:
             - Path=/ratings/**
 
+        - id: SECURITY-PROVIDER
+          uri: lb://SECURITY-PROVIDER
+          predicates:
+            - Path=/foodDelivery/**
+
     discovery:
       enabled: true

@@ -1,5 +1,6 @@
 package bookmyconsultation.doctorservice;
 
+import bookmyconsultation.doctorservice.service.Consumer;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
@@ -32,4 +33,5 @@ public class DoctorServiceApplication {
 	public ObjectMetadata metadata() {
 		return new ObjectMetadata();
 	}
+
 }
