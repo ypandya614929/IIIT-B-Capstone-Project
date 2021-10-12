@@ -53,6 +53,8 @@ public class Consumer {
            e.printStackTrace();
        } catch (MessagingException e) {
            e.printStackTrace();
+       } catch (Exception e) {
+            e.printStackTrace();
        } finally { }
 
     }
