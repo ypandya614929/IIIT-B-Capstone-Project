@@ -16,9 +16,6 @@ public class NotificationServiceApplication {
 	}
 
 	@Bean
-	public Consumer consumer(){return new Consumer();}
-
-	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}

@@ -58,7 +58,7 @@ public class DoctorServiceImpl implements DoctorService {
         doctorServiceRepository.save(doctorEntity);
         DetailDoctorDTO detailDoctorServiceDTO = DoctorMapper.EntityToDetailDTO(doctorEntity);
         String message = detailDoctorServiceDTO.toString();
-        producer.send(new ProducerRecord<String, String>("message", "DOCTOR_SERVICE_UPDATE", message));
+        producer.send(new ProducerRecord<String, String>("DOCTOR_SERVICE_UPDATE", "DOCTOR_SERVICE_UPDATE", message));
         return detailDoctorServiceDTO;
     }
 
