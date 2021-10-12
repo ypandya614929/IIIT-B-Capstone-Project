@@ -10,7 +10,7 @@ services:
     networks:
       - book-my-consultation-nw
     environment:
-      REGISTRY_HOST_NAME: 127.0.0.1
+      REGISTRY_HOST_NAME: 3.93.227.67
       REGISTRY_PORT: 8761
 
   bmc-gateway:
