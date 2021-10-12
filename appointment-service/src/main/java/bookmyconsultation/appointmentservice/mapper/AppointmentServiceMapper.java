@@ -28,6 +28,7 @@ public class AppointmentServiceMapper {
         appointmentServiceResponseDTO.setUserId(appointmentServiceEntity.getUserId());
         appointmentServiceResponseDTO.setTimeSlot(appointmentServiceEntity.getTimeSlot());
         appointmentServiceResponseDTO.setStatus(appointmentServiceEntity.getStatus());
+        appointmentServiceResponseDTO.setDoctorName(appointmentServiceEntity.getDoctorName());
         return appointmentServiceResponseDTO;
     }
 
