@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.MessagingException;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -40,15 +41,22 @@ public class Consumer {
         for(String topic : subscribedTopics) {
             System.out.println(topic);
         }
+        try {
+            while(true) {
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+                for(ConsumerRecord<String, String> record : records) {
+                    if(record.key().equalsIgnoreCase("PAYMENT_SERVICE")){
+                        appointmentServiceImpl.updateAppointmentStatus(record.value());
+                    }
+                }
+            }
+        } catch (
+            MessagingException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally { }
 
-       while(true) {
-           ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-           for(ConsumerRecord<String, String> record : records) {
-               if(record.key().equalsIgnoreCase("PAYMENT_SERVICE")){
-                   appointmentServiceImpl.updateAppointmentStatus(record.value());
-               }
-           }
-       }
     }
 
 }
