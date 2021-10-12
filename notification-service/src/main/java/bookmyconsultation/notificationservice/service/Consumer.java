@@ -1,62 +1,36 @@
 package bookmyconsultation.notificationservice.service;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.Set;
 import freemarker.template.TemplateException;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
-import javax.annotation.PostConstruct;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 
-
+@Component
 public class Consumer {
 
     @Autowired
     NotificationService notificationService;
 
-    @PostConstruct
-    public void consume() {
+    @KafkaListener(topics = "DOCTOR_SERVICE_UPDATE")
+    public void processMessage(String content) throws TemplateException, IOException, MessagingException {
+        notificationService.fetchMessage("DOCTOR_SERVICE_UPDATE", content);
+    }
 
-        Properties props = new Properties();
+    @KafkaListener(topics = "APPOINTMENT_SERVICE")
+    public void processMessage2(String content) throws TemplateException, IOException, MessagingException {
+        notificationService.fetchMessage("APPOINTMENT_SERVICE", content);
+    }
 
-        //Update the IP adress of Kafka server here//
+    @KafkaListener(topics = "PRESCRIPTION")
+    public void processMessage3(String content) throws TemplateException, IOException, MessagingException {
+        notificationService.fetchMessage("PRESCRIPTION", content);
+    }
 
-        props.put("bootstrap.servers", "23.20.158.142:9092");
-
-        props.setProperty("group.id", "bmc");
-        props.setProperty("enable.auto.commit", "true");
-        props.setProperty("auto.commit.interval.ms", "1000");
-        props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
-        consumer.subscribe(Arrays.asList("message"));
-        //Prints the topic subscription list
-        Set<String> subscribedTopics = consumer.subscription();
-
-       try {
-           while(true) {
-               ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
-               for(ConsumerRecord<String, String> record : records) {
-                   if(record.key().equalsIgnoreCase("DOCTOR_SERVICE_UPDATE") || record.key().equalsIgnoreCase("APPOINTMENT_SERVICE") || record.key().equalsIgnoreCase("PRESCRIPTION")){
-                       notificationService.fetchMessage(record.key(), record.value());
-                   }
-               }
-           }
-       } catch (TemplateException e) {
-           e.printStackTrace();
-       } catch (IOException e) {
-           e.printStackTrace();
-       } catch (MessagingException e) {
-           e.printStackTrace();
-       } catch (Exception e) {
-            e.printStackTrace();
-       } finally { }
-
+    @KafkaListener(topics = "message")
+    public void processMessage4(String content) {
+        System.out.println("Message : " + content);
     }
 
 }

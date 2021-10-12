@@ -54,7 +54,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         availabilityServiceImpl.updateAvailability(appointmentServiceEntity.getDoctorId(), appointmentServiceEntity.getAppointmentDate(), appointmentServiceEntity.getTimeSlot());
         AppointmentResponseDTO savedAppointmentServiceResponseDTO = AppointmentServiceMapper.EntityToDTO(appointmentServiceEntity);
         String message = appointmentServiceEntity.toString();
-        producer.send(new ProducerRecord<>("message","APPOINTMENT_SERVICE", message));
+        producer.send(new ProducerRecord<>("APPOINTMENT_SERVICE","APPOINTMENT_SERVICE", message));
         return savedAppointmentServiceResponseDTO;
     }
 
@@ -97,7 +97,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         String message = prescriptionServiceEntity.toString();
         UserDetailDTO userDetailDTO = getUserDetail(prescriptionserviceRequestDTO.getUserId());
         message += ", userEmailId=" + userDetailDTO.getEmailId();
-        producer.send(new ProducerRecord<>("message","PRESCRIPTION", message));
+        producer.send(new ProducerRecord<>("PRESCRIPTION","PRESCRIPTION", message));
         prescriptionServiceRepository.save(prescriptionServiceEntity);
     }
 
