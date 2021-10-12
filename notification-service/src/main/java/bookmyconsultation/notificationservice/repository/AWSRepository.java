@@ -25,10 +25,10 @@ import java.util.Properties;
 @Component
 public class AWSRepository {
 
-    private String ACCESS_KEY = "AKIAX6XIW2S4JCQQTSVX";
-    private String ACCESS_SECRET = "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";
-    private String SMTP_ACCESS_KEY = "AKIAX6XIW2S4FB2QL4GT";
-    private String SMTP_ACCESS_SECRET = "BF+n4UbWIryXqW0OQNZOc467dneFAFq4i4g3RQS/EQs5";
+    private String ACCESS_KEY = "";
+    private String ACCESS_SECRET = "";
+    private String SMTP_ACCESS_KEY = "";
+    private String SMTP_ACCESS_SECRET = "";
     private SesClient sesClient;
     private final FreeMarkerConfigurer freeMarkerConfig;
     private String FROM_EMAIL = "yashp6149@gmail.com";
