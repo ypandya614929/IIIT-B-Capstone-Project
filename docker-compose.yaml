@@ -54,6 +54,7 @@ services:
       REGISTRY_HOST_NAME: service-registry
       REGISTRY_PORT: 8761
       RATING_SVC_PORT: 8084
+      MONGO_DB_HOST: 23.20.158.142
     depends_on:
       - service-registry
       - bmc-gateway
@@ -71,6 +72,7 @@ services:
       REGISTRY_HOST_NAME: service-registry
       REGISTRY_PORT: 8761
       USER_SVC_PORT: 8083
+      MONGO_DB_HOST: 23.20.158.142
     depends_on:
       - service-registry
       - bmc-gateway
@@ -88,6 +90,7 @@ services:
       REGISTRY_HOST_NAME: service-registry
       REGISTRY_PORT: 8761
       DOCTOR_SVC_PORT: 8081
+      MONGO_DB_HOST: 23.20.158.142
     depends_on:
       - service-registry
       - bmc-gateway
@@ -105,6 +108,7 @@ services:
       REGISTRY_HOST_NAME: service-registry
       REGISTRY_PORT: 8761
       APPOINTMENT_SVC_PORT: 8082
+      MONGO_DB_HOST: 23.20.158.142
     depends_on:
       - service-registry
       - bmc-gateway
@@ -122,6 +126,7 @@ services:
       REGISTRY_HOST_NAME: service-registry
       REGISTRY_PORT: 8761
       PAYMENT_SVC_PORT: 8086
+      MONGO_DB_HOST: 23.20.158.142
     depends_on:
       - service-registry
       - bmc-gateway
