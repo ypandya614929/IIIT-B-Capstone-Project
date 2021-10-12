@@ -1,9 +1,6 @@
 package bookmyconsultation.appointmentservice.service;
 
-import bookmyconsultation.appointmentservice.dto.AppointmentRequestDTO;
-import bookmyconsultation.appointmentservice.dto.AppointmentResponseDTO;
-import bookmyconsultation.appointmentservice.dto.PrescriptionRequestDTO;
-import bookmyconsultation.appointmentservice.dto.UserDetailDTO;
+import bookmyconsultation.appointmentservice.dto.*;
 import bookmyconsultation.appointmentservice.entity.AppointmentEntity;
 import bookmyconsultation.appointmentservice.entity.PrescriptionEntity;
 import bookmyconsultation.appointmentservice.exception.PendingPaymentException;
@@ -15,6 +12,7 @@ import freemarker.template.TemplateException;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -45,8 +43,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     Producer<String, String> producer;
 
     @Override
-    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentServiceRequestDTO) throws TemplateException, IOException, MessagingException {
-        UserDetailDTO userDetailDTO = getUserDetail(appointmentServiceRequestDTO.getUserId());
+    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentServiceRequestDTO, String token) throws TemplateException, IOException, MessagingException {
+        UserDetailDTO userDetailDTO = getUserDetail(appointmentServiceRequestDTO.getUserId(), token);
         AppointmentEntity appointmentServiceEntity = AppointmentServiceMapper.DTOToEntity(appointmentServiceRequestDTO);
         appointmentServiceEntity.setUserEmailId(userDetailDTO.getEmailId());
         appointmentServiceEntity.setUserName(userDetailDTO.getFirstName()+" "+userDetailDTO.getLastName());
@@ -78,7 +76,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public void savePrescription(PrescriptionRequestDTO prescriptionserviceRequestDTO) {
+    public void savePrescription(PrescriptionRequestDTO prescriptionserviceRequestDTO, String token) {
         try {
             AppointmentResponseDTO appointmentServiceResponseDTO = retrieveAppointment(prescriptionserviceRequestDTO.getAppointmentId());
             if (appointmentServiceResponseDTO.getStatus().equalsIgnoreCase("PendingPayment")){
@@ -95,18 +93,27 @@ public class AppointmentServiceImpl implements AppointmentService {
         prescriptionServiceEntity.setDiagnosis(prescriptionserviceRequestDTO.getDiagnosis());
         prescriptionServiceEntity.setMedicineList(prescriptionserviceRequestDTO.getMedicineList());
         String message = prescriptionServiceEntity.toString();
-        UserDetailDTO userDetailDTO = getUserDetail(prescriptionserviceRequestDTO.getUserId());
+        UserDetailDTO userDetailDTO = getUserDetail(prescriptionserviceRequestDTO.getUserId(), token);
         message += ", userEmailId=" + userDetailDTO.getEmailId();
         producer.send(new ProducerRecord<>("PRESCRIPTION","PRESCRIPTION", message));
         prescriptionServiceRepository.save(prescriptionServiceEntity);
     }
 
-    public UserDetailDTO getUserDetail(String userId) {
+    public UserDetailDTO getUserDetail(String userId, String token) {
         String USER_SERVICE_URI = "http://USER-SERVICE/users/" + userId;
 
-        // calling payment service API using rest template
-        UserDetailDTO userDetailDTO = restTemplate.getForObject(USER_SERVICE_URI, UserDetailDTO.class);
-        return userDetailDTO;
+        HttpHeaders headers=new HttpHeaders();
+        headers.add("Authorization", token);
+        HttpEntity request=new HttpEntity(headers);
+
+        try {
+            ResponseEntity responseEntity = restTemplate.exchange(USER_SERVICE_URI, HttpMethod.GET, request, UserDetailDTO.class);
+            UserDetailDTO userDetailDTO = (UserDetailDTO) responseEntity.getBody();
+            return userDetailDTO;
+        }catch (Exception e){
+            System.out.println(e.getStackTrace());
+        }
+        return null;
     }
 
     public void updateAppointmentStatus(String message){

@@ -11,11 +11,11 @@ import java.util.List;
 
 public interface AppointmentService {
 
-    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentServiceRequestDTO) throws TemplateException, IOException, MessagingException;
+    public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO appointmentServiceRequestDTO, String token) throws TemplateException, IOException, MessagingException;
 
     public AppointmentResponseDTO retrieveAppointment(String appointmentId);
 
     public List<AppointmentResponseDTO> retrieveAppointmentByUserId(String userId);
 
-    public void savePrescription(PrescriptionRequestDTO prescriptionserviceRequestDTO);
+    public void savePrescription(PrescriptionRequestDTO prescriptionserviceRequestDTO, String token);
 }

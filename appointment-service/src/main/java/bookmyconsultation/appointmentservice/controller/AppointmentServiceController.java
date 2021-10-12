@@ -6,6 +6,7 @@ import bookmyconsultation.appointmentservice.service.AvailabilityService;
 import freemarker.template.TemplateException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,8 +51,8 @@ public class AppointmentServiceController {
     @PostMapping(value = "/appointments", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER')")
-    public ResponseEntity bookAppointment(@RequestBody AppointmentRequestDTO appointmentDTO) throws TemplateException, MessagingException, IOException, javax.mail.MessagingException {
-        AppointmentResponseDTO appointmentServiceResponseDTO = appointmentService.bookAppointment(appointmentDTO);
+    public ResponseEntity bookAppointment(@RequestHeader HttpHeaders headers, @RequestBody AppointmentRequestDTO appointmentDTO) throws TemplateException, MessagingException, IOException, javax.mail.MessagingException {
+        AppointmentResponseDTO appointmentServiceResponseDTO = appointmentService.bookAppointment(appointmentDTO, headers.getFirst(HttpHeaders.AUTHORIZATION));
         return ResponseEntity.ok().body(appointmentServiceResponseDTO.getAppointmentId());
     }
 
@@ -75,8 +76,8 @@ public class AppointmentServiceController {
     @PostMapping(value = "/prescriptions", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity savePrescription(@RequestBody PrescriptionRequestDTO prescriptionserviceRequestDTO){
-        appointmentService.savePrescription(prescriptionserviceRequestDTO);
+    public ResponseEntity savePrescription(@RequestHeader HttpHeaders headers, @RequestBody PrescriptionRequestDTO prescriptionserviceRequestDTO){
+        appointmentService.savePrescription(prescriptionserviceRequestDTO, headers.getFirst(HttpHeaders.AUTHORIZATION));
         return ResponseEntity.ok().build();
     }
 
